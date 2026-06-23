@@ -33,21 +33,15 @@ const createBooking =
       }
 
       const booking =
-        await Booking.create(
-          req.body
-        );
+  await Booking.create(
+    req.body
+  );
 
-      hotel.availableRooms =
-        hotel.availableRooms -
-        req.body.rooms;
-
-      await hotel.save();
-
-      res.status(201).json({
-        message:
-          "Booking Created Successfully",
-        booking,
-      });
+res.status(201).json({
+  message:
+    "Booking Created Successfully",
+  booking,
+});
     } catch (error) {
       res.status(500).json({
         message:
@@ -173,19 +167,6 @@ const cancelBooking =
             message:
               "Booking already cancelled",
           });
-      }
-      
-      const hotel =
-        await Hotel.findById(
-          booking.hotelId
-        );
-
-      if (hotel) {
-        hotel.availableRooms =
-          hotel.availableRooms +
-          booking.rooms;
-
-        await hotel.save();
       }
 
       booking.status =

@@ -126,6 +126,80 @@ const getHotelById =
     }
   };
 
+const getAvailability = async (req, res) => {
+  try {
+    const { hotelId } = req.params;
+    const { checkInDate, checkOutDate } = req.query;
+
+    if (!checkInDate || !checkOutDate) {
+      return res.status(400).json({
+        success: false,
+        message: "checkInDate and checkOutDate are required",
+      });
+    }
+
+    // Parse dates properly - handle both ISO strings and date objects
+    const startDate = new Date(checkInDate);
+    const endDate = new Date(checkOutDate);
+
+    if (isNaN(startDate) || isNaN(endDate)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date format",
+      });
+    }
+
+    if (startDate >= endDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Check-in date must be before check-out date",
+      });
+    }
+
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      return res.status(404).json({
+        success: false,
+        message: "Hotel not found",
+      });
+    }
+
+    const Booking = require("../models/Booking");
+    
+    // Find overlapping bookings using date range comparison
+    const bookedRooms = await Booking.find({
+      hotelId: hotelId,
+      status: { $in: ["Confirmed", "checked-in", "pending"] },
+      checkIn: { $lt: new Date(endDate) },
+      checkOut: { $gt: new Date(startDate) },
+    });
+
+    console.log(`[DEBUG] Hotel: ${hotel.hotelName}, Total Rooms: ${hotel.totalRooms}, Booked: ${bookedRooms.length}`);
+
+    const totalBooked = bookedRooms.reduce((sum, b) => sum + (b.rooms || 1), 0);
+    const available = Math.max(0, hotel.totalRooms - totalBooked);
+
+    res.json({
+      success: true,
+      data: {
+        hotelId,
+        checkInDate,
+        checkOutDate,
+        totalRooms: hotel.totalRooms,
+        bookedRooms: totalBooked,
+        availableRooms: available,
+      },
+    });
+  } catch (error) {
+    console.error("[ERROR] getAvailability:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching availability",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   
   addHotel,
@@ -134,4 +208,5 @@ module.exports = {
   updateHotel,
   deleteHotel,
   getHotelById,
+  getAvailability,
 };

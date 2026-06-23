@@ -8,6 +8,7 @@ const {
   updateHotel,
   deleteHotel,
   getHotelById,
+  getAvailability,
 } = require(
   "../controllers/hotelController"
 );
@@ -33,6 +34,11 @@ router.get(
 router.get(
   "/:id",
   getHotelById
+);
+
+router.get(
+  "/:hotelId/availability",
+  getAvailability
 );
 
 router.put(
