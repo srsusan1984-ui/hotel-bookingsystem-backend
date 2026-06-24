@@ -3,52 +3,98 @@ const Booking =
 
 const Hotel =
   require("../models/Hotel");
+  const User =
+  require("../models/User");
 
-const createBooking =
-  async (req, res) => {
-    try {
-      const hotel =
-        await Hotel.findById(
-          req.body.hotelId
-        );
+const sendEmail =
+  require("../utils/sendEmail");
 
-      if (!hotel) {
-        return res
-          .status(404)
-          .json({
-            message:
-              "Hotel not found",
-          });
-      }
+const createBooking = async (req, res) => {
+  try {
+    const hotel =
+      await Hotel.findById(
+        req.body.hotelId
+      );
 
-      if (
-        hotel.availableRooms <
-        req.body.rooms
-      ) {
-        return res
-          .status(400)
-          .json({
-            message: `Only ${hotel.availableRooms} room(s) available`,
-          });
-      }
-
-      const booking =
-  await Booking.create(
-    req.body
-  );
-
-res.status(201).json({
-  message:
-    "Booking Created Successfully",
-  booking,
-});
-    } catch (error) {
-      res.status(500).json({
-        message:
-          error.message,
-      });
+    if (!hotel) {
+      return res
+        .status(404)
+        .json({
+          message:
+            "Hotel not found",
+        });
     }
-  };
+
+    if (
+      hotel.availableRooms <
+      req.body.rooms
+    ) {
+      return res
+        .status(400)
+        .json({
+          message: `Only ${hotel.availableRooms} room(s) available`,
+        });
+    }
+
+    const booking =
+      await Booking.create(
+        req.body
+      );
+
+    const user =
+      await User.findById(
+        req.body.userId
+      );
+
+    if (user) {
+      await sendEmail(
+        user.email,
+        "Booking Confirmation",
+        `
+        <h2>Booking Confirmed 🎉</h2>
+
+        <p>Hello ${user.name},</p>
+
+        <p>
+          Your booking at
+          <b>${hotel.hotelName}</b>
+          has been confirmed.
+        </p>
+
+        <p>
+          Check-In:
+          ${req.body.checkIn}
+        </p>
+
+        <p>
+          Check-Out:
+          ${req.body.checkOut}
+        </p>
+
+        <p>
+          Amount:
+          ₹${req.body.totalAmount}
+        </p>
+
+        <h3>
+          Thank you for booking with us.
+        </h3>
+        `
+      );
+    }
+
+    res.status(201).json({
+      message:
+        "Booking Created Successfully",
+      booking,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        error.message,
+    });
+  }
+};
 
 const getUserBookings =
   async (req, res) => {

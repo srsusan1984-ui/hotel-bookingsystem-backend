@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const hotelRoutes =require("./routes/hotelRoutes");
+const paymentRoutes =require("./routes/PaymentRoutes");
 dotenv.config();
 
 connectDB();
@@ -39,6 +40,10 @@ app.use(
   reviewRoutes
 );
 app.use(
+  "/api/payment",
+  paymentRoutes
+);
+app.use(
   "/api/offers",
   offerRoutes
 );
@@ -46,6 +51,7 @@ app.use(
 app.get("/", (req, res) => {
   res.send("Backend Running...");
 });
+
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,5 +1,13 @@
 const Hotel =
   require("../models/Hotel");
+  const Offer =
+  require("../models/Offer");
+
+const Review =
+  require("../models/Review");
+
+const Booking =
+  require("../models/Booking");
 
 const addHotel =
 
@@ -91,13 +99,29 @@ const updateHotel =
 const deleteHotel =
   async (req, res) => {
     try {
+      const hotelId =
+        req.params.id;
+
+      await Offer.deleteMany({
+        applicableHotels:
+          hotelId,
+      });
+
+      await Review.deleteMany({
+        hotelId,
+      });
+
+      await Booking.deleteMany({
+        hotelId,
+      });
+
       await Hotel.findByIdAndDelete(
-        req.params.id
+        hotelId
       );
 
       res.status(200).json({
         message:
-          "Hotel Deleted Successfully",
+          "Hotel and related data deleted successfully",
       });
     } catch (error) {
       res.status(500).json({
