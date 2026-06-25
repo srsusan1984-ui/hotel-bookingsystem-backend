@@ -89,11 +89,14 @@ const createBooking = async (req, res) => {
       booking,
     });
   } catch (error) {
-    res.status(500).json({
-      message:
-        error.message,
-    });
-  }
+  console.error("========= BOOKING ERROR =========");
+  console.error(error);
+  console.error("===============================");
+
+  res.status(500).json({
+    message: error.message,
+  });
+}
 };
 
 const getUserBookings =
