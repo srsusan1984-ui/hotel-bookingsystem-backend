@@ -41,47 +41,47 @@ const createBooking = async (req, res) => {
         req.body
       );
 
-    const user =
-      await User.findById(
-        req.body.userId
-      );
+    // const user =
+    //   await User.findById(
+    //     req.body.userId
+    //   );
 
-    if (user) {
-      await sendEmail(
-        user.email,
-        "Booking Confirmation",
-        `
-        <h2>Booking Confirmed 🎉</h2>
+    // if (user) {
+    //   await sendEmail(
+    //     user.email,
+    //     "Booking Confirmation",
+    //     `
+    //     <h2>Booking Confirmed 🎉</h2>
 
-        <p>Hello ${user.name},</p>
+    //     <p>Hello ${user.name},</p>
 
-        <p>
-          Your booking at
-          <b>${hotel.hotelName}</b>
-          has been confirmed.
-        </p>
+    //     <p>
+    //       Your booking at
+    //       <b>${hotel.hotelName}</b>
+    //       has been confirmed.
+    //     </p>
 
-        <p>
-          Check-In:
-          ${req.body.checkIn}
-        </p>
+    //     <p>
+    //       Check-In:
+    //       ${req.body.checkIn}
+    //     </p>
 
-        <p>
-          Check-Out:
-          ${req.body.checkOut}
-        </p>
+    //     <p>
+    //       Check-Out:
+    //       ${req.body.checkOut}
+    //     </p>
 
-        <p>
-          Amount:
-          ₹${req.body.totalAmount}
-        </p>
+    //     <p>
+    //       Amount:
+    //       ₹${req.body.totalAmount}
+    //     </p>
 
-        <h3>
-          Thank you for booking with us.
-        </h3>
-        `
-      );
-    }
+    //     <h3>
+    //       Thank you for booking with us.
+    //     </h3>
+    //     `
+    //   );
+    // }
 
     res.status(201).json({
       message:
