@@ -11,6 +11,7 @@ const sendEmail =
 
 const createBooking = async (req, res) => {
   try {
+    console.log("🔥🔥🔥 NEW DEPLOY WORKING 🔥🔥🔥");
     const hotel =
       await Hotel.findById(
         req.body.hotelId
