@@ -10,94 +10,11 @@ const sendEmail =
   require("../utils/sendEmail");
 
 const createBooking = async (req, res) => {
-  try {
-    console.log("🔥🔥🔥 NEW DEPLOY WORKING 🔥🔥🔥");
-    const hotel =
-      await Hotel.findById(
-        req.body.hotelId
-      );
+  console.log("STEP 1");
 
-    if (!hotel) {
-      return res
-        .status(404)
-        .json({
-          message:
-            "Hotel not found",
-        });
-    }
-
-    if (
-      hotel.availableRooms <
-      req.body.rooms
-    ) {
-      return res
-        .status(400)
-        .json({
-          message: `Only ${hotel.availableRooms} room(s) available`,
-        });
-    }
-
-    const booking =
-      await Booking.create(
-        req.body
-      );
-
-    // const user =
-    //   await User.findById(
-    //     req.body.userId
-    //   );
-
-    // if (user) {
-    //   await sendEmail(
-    //     user.email,
-    //     "Booking Confirmation",
-    //     `
-    //     <h2>Booking Confirmed 🎉</h2>
-
-    //     <p>Hello ${user.name},</p>
-
-    //     <p>
-    //       Your booking at
-    //       <b>${hotel.hotelName}</b>
-    //       has been confirmed.
-    //     </p>
-
-    //     <p>
-    //       Check-In:
-    //       ${req.body.checkIn}
-    //     </p>
-
-    //     <p>
-    //       Check-Out:
-    //       ${req.body.checkOut}
-    //     </p>
-
-    //     <p>
-    //       Amount:
-    //       ₹${req.body.totalAmount}
-    //     </p>
-
-    //     <h3>
-    //       Thank you for booking with us.
-    //     </h3>
-    //     `
-    //   );
-    // }
-
-    res.status(201).json({
-      message:
-        "Booking Created Successfully",
-      booking,
-    });
-  } catch (error) {
-  console.error("========= BOOKING ERROR =========");
-  console.error(error);
-  console.error("===============================");
-
-  res.status(500).json({
-    message: error.message,
+  return res.status(201).json({
+    message: "Controller works",
   });
-}
 };
 
 const getUserBookings =
