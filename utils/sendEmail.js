@@ -16,7 +16,14 @@ const sendEmail = async (
           process.env.EMAIL_PASS,
       },
     });
-
+// 👇 Add it here
+  transporter.verify((error, success) => {
+    if (error) {
+      console.error("SMTP Error:", error);
+    } else {
+      console.log("SMTP Server is ready");
+    }
+  });
   await transporter.sendMail({
     from:
       process.env.EMAIL_USER,
