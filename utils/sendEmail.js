@@ -25,7 +25,7 @@ transporter.verify((error) => {
 
 const sendEmail = async (to, subject, html) => {
   await transporter.sendMail({
-    from: '"Hotel Booking System" <srsusan1984@gmail.com>',
+    from: '"Hotel Booking System" <b08416001@smtp-brevo.com>',
     to,
     subject,
     html,
