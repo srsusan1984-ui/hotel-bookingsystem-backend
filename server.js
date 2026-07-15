@@ -30,7 +30,7 @@ const reviewRoutes = require(
 const offerRoutes = require(
   "./routes/offerRoutes"
 );
-
+const userRoutes = require("./routes/userRoutes");
 app.use(
   "/api/bookings",
   bookingRoutes
@@ -47,7 +47,7 @@ app.use(
   "/api/offers",
   offerRoutes
 );
-
+app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("Backend Running...");
 });
